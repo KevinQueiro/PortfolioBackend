@@ -27,6 +27,4 @@ public class Tecnologia {
     @Column(name = "Tipo")
     private String tipo;
     
-    @OneToMany(mappedBy = "tecnologia",cascade = CascadeType.ALL)
-    List<Proyecto_Tecnologia> proyecto_tecnologias;
 }

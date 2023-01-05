@@ -36,7 +36,4 @@ public class Proyecto {
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
-    @OneToMany(mappedBy = "proyecto", cascade = CascadeType.ALL)
-    List<Proyecto_Tecnologia> proyecto_tecnologia;
-    
 }
