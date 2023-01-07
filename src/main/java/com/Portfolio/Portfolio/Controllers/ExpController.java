@@ -46,25 +46,6 @@ public class ExpController {
         }
     }
 
-    /* @PostMapping("/save/{idUser}")
-    public Exp crearExp(@RequestBody Exp ex,
-    @PathVariable("idUser") Integer idUser,
-    @RequestParam("idTecno") Integer idTecno) {
-    try {
-    Usuario user = userService.findUsuario(idUser);
-    ex.setUsuario(user);
-    if (idTecno != 0) {
-    Tecnologia tecno = tecnoService.findTecno(idTecno);
-    ex.getTecnologiaExp().add(tecno);
-    tecno.getExp().add(ex);
-    }
-    return expService.saveExp(ex);
-    } catch (Exception e) {
-    System.out.println("_____________________" + e.getMessage());
-    return null;
-    }
-    }*/
-
     @DeleteMapping("/delete/{id}")
     public String deleteExp(@PathVariable("id") Integer id) {
         if (expService.deleteExp(id)) {
@@ -74,37 +55,50 @@ public class ExpController {
         }
     }
 
-    @PutMapping("/change/{id}")
-    public Exp changeOnlyExp(@PathVariable("id") Integer id,
-            @RequestBody Exp ex) {
-        Exp toChange = expService.findExp(id);
+    @PutMapping("/change")
+    public Exp changeExp(@RequestParam(name = "tecno", defaultValue = "0") List<String> tecno,
+            @RequestParam(name = "exp", defaultValue = "0") Integer expId,
+            @RequestParam(name = "user", defaultValue = "0") Integer usuarioId,
+            @RequestBody Exp toChangeExp) {
 
-        toChange.setDescripcion(ex.getDescripcion());
-        toChange.setLugar(ex.getLugar());
-        toChange.setFechaIni(ex.getFechaIni());
-        toChange.setFechaFin(ex.getFechaFin());
+        if (Integer.parseInt(tecno.get(0)) != 0 && expId != 0 && usuarioId != 0) {
 
-        expService.saveExp(toChange);
+            Exp exp = expService.findExp(expId);
+            Usuario usuario = userService.findUsuario(usuarioId);
 
-        return toChange;
-    }
+            exp.setDescripcion(toChangeExp.getDescripcion());
+            exp.setLugar(toChangeExp.getLugar());
+            exp.setFechaFin(toChangeExp.getFechaFin());
+            exp.setFechaIni(toChangeExp.getFechaIni());
 
-    @PutMapping("/change/{id}/{user_id}")
-    public Exp changeExp(@PathVariable("id") Integer id,
-            @PathVariable("user_id") Integer idUser,
-            @RequestBody Exp ex) {
-        Exp toChange = expService.findExp(id);
-        Usuario user = userService.findUsuario(idUser);
+            for (String eachTecno : tecno) {
 
-        toChange.setDescripcion(ex.getDescripcion());
-        toChange.setLugar(ex.getLugar());
-        toChange.setFechaIni(ex.getFechaIni());
-        toChange.setFechaFin(ex.getFechaFin());
-        toChange.setUsuario(user);
+                Tecnologia toAdd = tecnoService.findTecno(Integer.valueOf(eachTecno));
+                exp.getTecnologias().add(toAdd);
+                toAdd.getExps().add(exp);
 
-        expService.saveExp(toChange);
+            }
 
-        return toChange;
+            if (exp.getUsuario() == usuario) {
+
+                System.out.println("El usuario " + usuario.getUserName() + " ya esta conectado a la experiencia: " + exp.getDescripcion());
+
+            } else {
+                
+                exp.setUsuario(usuario);
+                
+            }
+            
+            expService.saveExp(exp);
+            return exp;
+
+        } else {
+            
+            System.out.println("Faltan datos");
+            return null;
+            
+        }
+
     }
 
 }

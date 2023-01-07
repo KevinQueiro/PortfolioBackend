@@ -40,4 +40,13 @@ public class Tecnologia {
             inverseJoinColumns = {
                 @JoinColumn(name = "proyecto_id")})
     Set<Proyecto> proyectos = new HashSet<>();
+    
+    @JsonIgnore
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinTable(name = "Exp_Tecnologia",
+            joinColumns = {
+                @JoinColumn(name = "tecnologia_id")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "exp_id")})
+    Set<Exp> exps = new HashSet<>();
 }
