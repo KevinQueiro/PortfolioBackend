@@ -49,7 +49,7 @@ public class ExpController {
     @DeleteMapping("/delete/{id}")
     public String deleteExp(@PathVariable("id") Integer id) {
         if (expService.deleteExp(id)) {
-            return "Tecnologia eliminada";
+            return "Experiencia eliminada";
         } else {
             return "hubo un problema";
         }
@@ -59,46 +59,55 @@ public class ExpController {
     public Exp changeExp(@RequestParam(name = "tecno", defaultValue = "0") List<String> tecno,
             @RequestParam(name = "exp", defaultValue = "0") Integer expId,
             @RequestParam(name = "user", defaultValue = "0") Integer usuarioId,
-            @RequestBody Exp toChangeExp) {
+            @RequestBody Exp toChangeExp,
+            @RequestParam(name = "unbind", defaultValue = "false") boolean unbind) {
 
-        if (Integer.parseInt(tecno.get(0)) != 0 && expId != 0 && usuarioId != 0) {
+        //se busca el proyecto y el usuario con sus respectivos ids
+        Exp exp = expService.findExp(expId);
+        Usuario usuario = userService.findUsuario(usuarioId);
 
-            Exp exp = expService.findExp(expId);
-            Usuario usuario = userService.findUsuario(usuarioId);
-
+        if (exp == null) {
+            System.out.println("No existe una experiencia con id: " + expId);
+        } else {
+            //se cambian los campos sin relaciones de la tabla proyecto
             exp.setDescripcion(toChangeExp.getDescripcion());
             exp.setLugar(toChangeExp.getLugar());
-            exp.setFechaFin(toChangeExp.getFechaFin());
             exp.setFechaIni(toChangeExp.getFechaIni());
-
+            exp.setFechaFin(toChangeExp.getFechaFin());
+            //se recorre el array de tecnologias
             for (String eachTecno : tecno) {
-
-                Tecnologia toAdd = tecnoService.findTecno(Integer.valueOf(eachTecno));
-                exp.getTecnologias().add(toAdd);
-                toAdd.getExps().add(exp);
-
+                if (tecnoService.findTecno(Integer.valueOf(eachTecno)) == null) {
+                    System.out.println("no existe una tecnologia con id: " + eachTecno);
+                } else {
+                    if (unbind) {
+                        Tecnologia toUnbind = tecnoService.findTecno(Integer.valueOf(eachTecno));
+                        exp.getTecnologias().removeIf((t) -> t.getId() == Integer.valueOf(eachTecno));
+                        toUnbind.getExps().removeIf((t) -> t.getId() == expId);
+                    } else {
+                        //se busca cada tecnologia por su i
+                        Tecnologia toAdd = tecnoService.findTecno(Integer.valueOf(eachTecno));
+                        //se agregrega la tecnologia a la relacion desde ambos lados exp--->tec y tec--->exp
+                        exp.getTecnologias().add(toAdd);
+                        toAdd.getExps().add(exp);
+                    }
+                }
             }
-
-            if (exp.getUsuario() == usuario) {
-
-                System.out.println("El usuario " + usuario.getUserName() + " ya esta conectado a la experiencia: " + exp.getDescripcion());
-
+            if (usuario == null) {
+                System.out.println("No existe un usuario con id: " + usuarioId);
             } else {
-                
-                exp.setUsuario(usuario);
-                
+                //se verifica que el proyecto no este ya relacionado al actual usuario
+                if (exp.getUsuario() == usuario) {
+                    if (unbind) {
+                        exp.setUsuario(null);
+                        //usuario.getProyectos().removeIf((t) -> t.getId() == proyectId);
+                    }
+                } else {
+                    //si no esta vinculado se lo vincula
+                    exp.setUsuario(usuario);
+                }
             }
-            
             expService.saveExp(exp);
-            return exp;
-
-        } else {
-            
-            System.out.println("Faltan datos");
-            return null;
-            
         }
-
+        return exp;
     }
-
 }
