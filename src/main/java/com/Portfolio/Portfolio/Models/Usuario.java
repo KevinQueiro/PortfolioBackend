@@ -7,7 +7,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,8 +39,8 @@ public class Usuario {
     List<Educacion> educaciones;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    List<Exp> exps;
+    Set<Exp> exps = new HashSet<>();
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    List<Proyecto> proyectos;
+    Set<Proyecto> proyectos = new HashSet<>();
 }

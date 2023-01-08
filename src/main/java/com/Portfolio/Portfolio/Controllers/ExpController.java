@@ -46,65 +46,68 @@ public class ExpController {
         }
     }
 
-    /* @PostMapping("/save/{idUser}")
-    public Exp crearExp(@RequestBody Exp ex,
-    @PathVariable("idUser") Integer idUser,
-    @RequestParam("idTecno") Integer idTecno) {
-    try {
-    Usuario user = userService.findUsuario(idUser);
-    ex.setUsuario(user);
-    if (idTecno != 0) {
-    Tecnologia tecno = tecnoService.findTecno(idTecno);
-    ex.getTecnologiaExp().add(tecno);
-    tecno.getExp().add(ex);
-    }
-    return expService.saveExp(ex);
-    } catch (Exception e) {
-    System.out.println("_____________________" + e.getMessage());
-    return null;
-    }
-    }*/
-
     @DeleteMapping("/delete/{id}")
     public String deleteExp(@PathVariable("id") Integer id) {
         if (expService.deleteExp(id)) {
-            return "Tecnologia eliminada";
+            return "Experiencia eliminada";
         } else {
             return "hubo un problema";
         }
     }
 
-    @PutMapping("/change/{id}")
-    public Exp changeOnlyExp(@PathVariable("id") Integer id,
-            @RequestBody Exp ex) {
-        Exp toChange = expService.findExp(id);
+    @PutMapping("/change")
+    public Exp changeExp(@RequestParam(name = "tecno", defaultValue = "0") List<String> tecno,
+            @RequestParam(name = "exp", defaultValue = "0") Integer expId,
+            @RequestParam(name = "user", defaultValue = "0") Integer usuarioId,
+            @RequestBody Exp toChangeExp,
+            @RequestParam(name = "unbind", defaultValue = "false") boolean unbind) {
 
-        toChange.setDescripcion(ex.getDescripcion());
-        toChange.setLugar(ex.getLugar());
-        toChange.setFechaIni(ex.getFechaIni());
-        toChange.setFechaFin(ex.getFechaFin());
+        //se busca el proyecto y el usuario con sus respectivos ids
+        Exp exp = expService.findExp(expId);
+        Usuario usuario = userService.findUsuario(usuarioId);
 
-        expService.saveExp(toChange);
-
-        return toChange;
+        if (exp == null) {
+            System.out.println("No existe una experiencia con id: " + expId);
+        } else {
+            //se cambian los campos sin relaciones de la tabla proyecto
+            exp.setDescripcion(toChangeExp.getDescripcion());
+            exp.setLugar(toChangeExp.getLugar());
+            exp.setFechaIni(toChangeExp.getFechaIni());
+            exp.setFechaFin(toChangeExp.getFechaFin());
+            //se recorre el array de tecnologias
+            for (String eachTecno : tecno) {
+                if (tecnoService.findTecno(Integer.valueOf(eachTecno)) == null) {
+                    System.out.println("no existe una tecnologia con id: " + eachTecno);
+                } else {
+                    if (unbind) {
+                        Tecnologia toUnbind = tecnoService.findTecno(Integer.valueOf(eachTecno));
+                        exp.getTecnologias().removeIf((t) -> t.getId() == Integer.valueOf(eachTecno));
+                        toUnbind.getExps().removeIf((t) -> t.getId() == expId);
+                    } else {
+                        //se busca cada tecnologia por su i
+                        Tecnologia toAdd = tecnoService.findTecno(Integer.valueOf(eachTecno));
+                        //se agregrega la tecnologia a la relacion desde ambos lados exp--->tec y tec--->exp
+                        exp.getTecnologias().add(toAdd);
+                        toAdd.getExps().add(exp);
+                    }
+                }
+            }
+            if (usuario == null) {
+                System.out.println("No existe un usuario con id: " + usuarioId);
+            } else {
+                //se verifica que el proyecto no este ya relacionado al actual usuario
+                if (exp.getUsuario() == usuario) {
+                    if (unbind) {
+                        exp.setUsuario(null);
+                        //usuario.getProyectos().removeIf((t) -> t.getId() == proyectId);
+                    }
+                } else {
+                    //si no esta vinculado se lo vincula
+                    exp.setUsuario(usuario);
+                }
+            }
+            expService.saveExp(exp);
+        }
+        return exp;
     }
-
-    @PutMapping("/change/{id}/{user_id}")
-    public Exp changeExp(@PathVariable("id") Integer id,
-            @PathVariable("user_id") Integer idUser,
-            @RequestBody Exp ex) {
-        Exp toChange = expService.findExp(id);
-        Usuario user = userService.findUsuario(idUser);
-
-        toChange.setDescripcion(ex.getDescripcion());
-        toChange.setLugar(ex.getLugar());
-        toChange.setFechaIni(ex.getFechaIni());
-        toChange.setFechaFin(ex.getFechaFin());
-        toChange.setUsuario(user);
-
-        expService.saveExp(toChange);
-
-        return toChange;
-    }
-
 }

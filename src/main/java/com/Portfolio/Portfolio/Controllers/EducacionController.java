@@ -1,6 +1,5 @@
 package com.Portfolio.Portfolio.Controllers;
 
-import ch.qos.logback.core.model.processor.PhaseIndicator;
 import com.Portfolio.Portfolio.Models.Educacion;
 import com.Portfolio.Portfolio.Models.Usuario;
 import com.Portfolio.Portfolio.Service.Educacion.EducacionService;
@@ -73,19 +72,19 @@ public class EducacionController {
         return toChange;
     }
 
-     @PutMapping("/change/{id}/{user_id}")
-    public Educacion changeEdu(@PathVariable("id") Integer id,@PathVariable("user_id") Integer idUser, @RequestBody Educacion edu) {
+    @PutMapping("/change/{id}/{user_id}")
+    public Educacion changeEdu(@PathVariable("id") Integer id, @PathVariable("user_id") Integer idUser, @RequestBody Educacion edu) {
         Educacion toChange = eduService.findEdu(id);
         Usuario user = userService.findUsuario(idUser);
-        
+
         toChange.setLugar(edu.getLugar());
         toChange.setTitulo(edu.getTitulo());
         toChange.setFechaFin(edu.getFechaFin());
         toChange.setUsuario(user);
-        
+
         eduService.saveEdu(toChange);
-        
+
         return toChange;
     }
-    
+
 }
