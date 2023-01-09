@@ -2,8 +2,12 @@ package com.Portfolio.Portfolio.Controllers;
 
 import com.Portfolio.Portfolio.Models.Usuario;
 import com.Portfolio.Portfolio.Service.Usuario.UsuarioService;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,8 +30,20 @@ public class UsuarioController {
     }
 
     @PostMapping("/save")
-    public Usuario crearUsuario(@RequestBody Usuario user) {
-        return userService.saveUser(user);
+    public ResponseEntity<?> crearUsuario(@RequestBody Usuario user) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            userService.saveUser(user);
+            response.put("Usuario agregado", user);
+        } catch (Exception e) {
+            response.put("Mensaje", "Algo salio mal");
+            response.put("error", e.getMessage());
+            response.put("Datos Requeridos", "*nombre*, *apellido*, titulo, about, foto");
+            return new ResponseEntity<Map<String, Object>>(response, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<Usuario>(user, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -43,9 +59,13 @@ public class UsuarioController {
     public Usuario changeUser(@PathVariable("id") Integer id, @RequestBody Usuario user) {
         Usuario toChange = userService.findUsuario(id);
 
-        toChange.setUserName(user.getUserName());
+        toChange.setNombre(user.getNombre());
+        toChange.setApellido(user.getApellido());
+        toChange.setTitulo(user.getTitulo());
+        toChange.setAbout(user.getAbout());
+        toChange.setFoto(user.getFoto());
         toChange.setPassword(user.getPassword());
-
+        
         userService.saveUser(toChange);
 
         return toChange;
