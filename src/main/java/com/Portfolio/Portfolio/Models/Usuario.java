@@ -23,14 +23,23 @@ public class Usuario {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "userName", nullable = false)
-    private String userName;
+    @Column(name = "nombre", nullable = false)
+    private String nombre;
+
+    @Column(name = "apellido", nullable = false)
+    private String apellido;
+
+    @Column(name = "titulo")
+    private String titulo;
+
+    @Column(name = "about")
+    private String about;
+
+    @Column(name = "foto")
+    private String foto;
 
     @Column(name = "password", nullable = false)
     private String password;
-
-    @Column(name = "canModify", columnDefinition = "boolean default false")
-    private Boolean canModify = false;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     List<Skill> skills;
@@ -43,4 +52,14 @@ public class Usuario {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     Set<Proyecto> proyectos = new HashSet<>();
+
+    public Usuario(String nombre, String apellido, String titulo, String password) {
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.titulo = titulo;
+        this.password = password;
+    }
+
+    public Usuario(){   
+    }
 }

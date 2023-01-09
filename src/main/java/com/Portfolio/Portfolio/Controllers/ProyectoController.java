@@ -84,7 +84,6 @@ public class ProyectoController {
                     } else {
                         //se busca cada tecnologia por su i
                         Tecnologia toAdd = tecnoService.findTecno(Integer.valueOf(eachTecno));
-                        System.out.println(toAdd.getNombre());
                         //se agregrega la tecnologia a la relacion desde ambos lados pro--->tec y tec--->pro
                         proyecto.getTecnologias().add(toAdd);
                         toAdd.getProyectos().add(proyecto);
@@ -101,7 +100,6 @@ public class ProyectoController {
                     }
                 } else {
                     //si no esta vinculado se lo vincula
-                    System.out.println(usuario.getUserName());
                     proyecto.setUsuario(usuario);
                 }
             }
