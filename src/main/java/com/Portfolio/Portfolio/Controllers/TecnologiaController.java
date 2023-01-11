@@ -4,6 +4,7 @@ import com.Portfolio.Portfolio.Models.Tecnologia;
 import com.Portfolio.Portfolio.Service.Tecnologia.TecnologiaService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,15 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/tecnologias")
+@CrossOrigin(origins = "http://localhost:4200")
 public class TecnologiaController {
 
     @Autowired
     TecnologiaService tecnoService;
-
-    /* @GetMapping("/")
-    public String hola(){
-    return "hola aca estoy";
-    }*/
     
     @GetMapping("/all")
     public List<Tecnologia> getAllTecno() {

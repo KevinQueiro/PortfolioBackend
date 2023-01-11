@@ -72,6 +72,8 @@ public class ProyectoController {
             //se cambian los campos sin relaciones de la tabla proyecto
             proyecto.setDescripcion(toChangePro.getDescripcion());
             proyecto.setLink(toChangePro.getLink());
+            proyecto.setFoto(toChangePro.getFoto());
+            proyecto.setNombre(toChangePro.getNombre());
             //se recorre el array de tecnologias
             for (String eachTecno : tecno) {
                 if (tecnoService.findTecno(Integer.valueOf(eachTecno)) == null) {

@@ -25,12 +25,18 @@ public class Proyecto {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "nombre")
+    private String nombre;
+    
     @Column(name = "Descripcion")
     private String descripcion;
 
     @Column(name = "Link")
     private String link;
 
+    @Column(name = "Foto")
+    private String foto;
+    
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id")
