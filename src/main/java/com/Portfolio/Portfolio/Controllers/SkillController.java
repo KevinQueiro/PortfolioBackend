@@ -6,6 +6,7 @@ import com.Portfolio.Portfolio.Service.Skill.SkillService;
 import com.Portfolio.Portfolio.Service.Usuario.UsuarioService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/skills")
+@CrossOrigin(origins = "http://localhost:4200")
 public class SkillController {
 
     @Autowired
@@ -34,13 +36,16 @@ public class SkillController {
     public Skill crearSkill(@RequestBody Skill skill,
             @PathVariable("idUser") Integer idUser) {
         try {
+            if(skill.getPercen()!=""&&skill.getNombre()!=""){
             Usuario user = userService.findUsuario(idUser);
             skill.setUsuario(user);
             return skillService.saveSkill(skill);
+            }
         } catch (Exception e) {
             System.out.println("_____________________________" + e.getMessage());
             return null;
         }
+        return null;
     }
 
     @PostMapping("/save")
@@ -55,6 +60,7 @@ public class SkillController {
 
     @DeleteMapping("/delete/{id}")
     public String deleteSkill(@PathVariable("id") Integer id) {
+        System.out.println("entra el delete");
         if (skillService.deleteSkill(id)) {
             return "Skill eliminada";
         } else {
@@ -68,10 +74,9 @@ public class SkillController {
         Skill toChange = skillService.findSkill(id);
 
         toChange.setNombre(skill.getNombre());
-        toChange.setPercen(skill.getPercen());
-
+        toChange.setPercen(skill.getPercen()+"%");
+        
         skillService.saveSkill(toChange);
-
         return toChange;
     }
 
@@ -92,7 +97,7 @@ public class SkillController {
     }
 
     @GetMapping("/one/{id}")
-    public Skill showUser(@PathVariable("id") Integer id) {
+    public Skill showSkill(@PathVariable("id") Integer id) {
         return skillService.findSkill(id);
     }
 }

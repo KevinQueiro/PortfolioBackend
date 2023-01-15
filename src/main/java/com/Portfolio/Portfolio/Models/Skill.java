@@ -26,7 +26,7 @@ public class Skill {
     private String nombre;
 
     @Column(name = "Percent")
-    private Integer percen;
+    private String percen;
 
     @JsonIgnore
     @ManyToOne (fetch = FetchType.EAGER)

@@ -32,6 +32,9 @@ public class Exp {
     @Column(name = "Lugar")
     private String lugar;
 
+    @Column(name = "Foto")
+    private String foto;
+    
     @Column(name = "FechaIni")
     private Date fechaIni;
 

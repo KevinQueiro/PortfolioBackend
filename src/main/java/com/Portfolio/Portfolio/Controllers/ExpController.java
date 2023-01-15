@@ -74,6 +74,7 @@ public class ExpController {
             exp.setLugar(toChangeExp.getLugar());
             exp.setFechaIni(toChangeExp.getFechaIni());
             exp.setFechaFin(toChangeExp.getFechaFin());
+            exp.setFoto(toChangeExp.getFoto());
             //se recorre el array de tecnologias
             for (String eachTecno : tecno) {
                 if (tecnoService.findTecno(Integer.valueOf(eachTecno)) == null) {
