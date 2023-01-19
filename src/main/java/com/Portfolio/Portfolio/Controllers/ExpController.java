@@ -7,8 +7,6 @@ import com.Portfolio.Portfolio.Service.Exp.ExpService;
 import com.Portfolio.Portfolio.Service.Tecnologia.TecnologiaService;
 import com.Portfolio.Portfolio.Service.Usuario.UsuarioService;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;

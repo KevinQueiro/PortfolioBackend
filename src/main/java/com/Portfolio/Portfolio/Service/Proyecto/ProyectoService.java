@@ -12,4 +12,6 @@ public interface ProyectoService {
     boolean deleteProject(Integer id);
 
     Proyecto findProject(Integer id);
+
+    public Proyecto findPro(Integer id);
 }

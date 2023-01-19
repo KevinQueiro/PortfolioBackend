@@ -37,4 +37,9 @@ public class ProyectoServiceImpl implements ProyectoService {
         return proRepository.findById(id).orElse(null);
     }
 
+    @Override
+    public Proyecto findPro(Integer id) {
+        return proRepository.findById(id).orElse(null);
+    }
+
 }

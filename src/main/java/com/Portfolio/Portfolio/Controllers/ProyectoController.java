@@ -8,6 +8,7 @@ import com.Portfolio.Portfolio.Service.Tecnologia.TecnologiaService;
 import com.Portfolio.Portfolio.Service.Usuario.UsuarioService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/proyectos")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProyectoController {
 
     @Autowired
@@ -37,17 +39,36 @@ public class ProyectoController {
     }
 
     @PostMapping("/save")
-    public Proyecto crearOnlyProyecto(@RequestBody Proyecto pro) {
-        try {
-            return proService.saveProject(pro);
-        } catch (Exception e) {
-            System.out.println("______________" + e.getMessage());
-            return null;
+    public Proyecto crearOnlyProyecto(@RequestParam(name = "tecno", defaultValue = "0") List<String> tecno,
+            @RequestParam(name="user", defaultValue = "0") Integer usuarioId,
+            @RequestBody Proyecto pro) {
+        
+        Usuario usuario = userService.findUsuario(usuarioId);
+        
+        for (String eachTecno : tecno){
+            if ( tecnoService.findTecno(Integer.valueOf(eachTecno)) == null){
+                System.out.println("no existe una tecnologia con id: " + eachTecno);
+            } else {
+                Tecnologia toAdd = tecnoService.findTecno(Integer.valueOf(eachTecno));
+                pro.getTecnologias().add(toAdd);
+                toAdd.getProyectos().add(pro);
+            }
         }
+        if (usuario == null) {
+            System.out.println("No existe un usuario con id: " + usuarioId);
+        } else {
+            pro.setUsuario(usuario);
+        }
+        proService.saveProject(pro);
+        return pro;
     }
 
     @DeleteMapping("/delete/{id}")
     public String deleteProject(@PathVariable("id") Integer id) {
+        Proyecto pro = proService.findProject(id);
+        for (Tecnologia eachTecno : pro.getTecnologias()){
+            eachTecno.getProyectos().removeIf(t -> t.getId() == id);
+        }
         if (proService.deleteProject(id)) {
             return "Proyecto eliminado";
         } else {
@@ -109,4 +130,11 @@ public class ProyectoController {
         }
         return proyecto;
     }
+    
+     @GetMapping("/one/{id}")
+    public Proyecto showExp(@PathVariable("id") Integer id) {
+        return proService.findPro(id);
+    }
+
+    
 }
