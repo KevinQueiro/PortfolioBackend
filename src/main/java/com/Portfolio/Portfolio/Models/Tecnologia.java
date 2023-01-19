@@ -33,7 +33,7 @@ public class Tecnologia {
     private String tipo;
 
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "Proyecto_Tecnologia",
             joinColumns = {
                 @JoinColumn(name = "tecnologia_id")},
@@ -42,7 +42,7 @@ public class Tecnologia {
     Set<Proyecto> proyectos = new HashSet<>();
     
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "Exp_Tecnologia",
             joinColumns = {
                 @JoinColumn(name = "tecnologia_id")},

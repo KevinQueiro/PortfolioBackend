@@ -52,5 +52,10 @@ public class TecnologiaController {
 
         return toChange;
     }
+    
+     @GetMapping("/one/{id}")
+    public Tecnologia showSkill(@PathVariable("id") Integer id) {
+        return tecnoService.findTecno(id);
+    }
 
 }
