@@ -1,6 +1,7 @@
 package com.Portfolio.Portfolio.Models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,10 +37,10 @@ public class Exp {
     private String foto;
     
     @Column(name = "FechaIni")
-    private Date fechaIni;
+    private String fechaIni;
 
     @Column(name = "FechaFin")
-    private Date fechaFin;
+    private String fechaFin;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)

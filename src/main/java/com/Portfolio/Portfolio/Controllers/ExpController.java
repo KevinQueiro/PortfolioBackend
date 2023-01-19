@@ -7,7 +7,10 @@ import com.Portfolio.Portfolio.Service.Exp.ExpService;
 import com.Portfolio.Portfolio.Service.Tecnologia.TecnologiaService;
 import com.Portfolio.Portfolio.Service.Usuario.UsuarioService;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/exp")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ExpController {
 
     @Autowired
@@ -37,17 +41,40 @@ public class ExpController {
     }
 
     @PostMapping("/save")
-    public Exp crearOnlyExp(@RequestBody Exp ex) {
-        try {
-            return expService.saveExp(ex);
-        } catch (Exception e) {
-            System.out.println("_____________________" + e.getMessage());
-            return null;
+    public Exp crearOnlyExp(@RequestParam(name = "tecno", defaultValue = "0") List<String> tecno,
+            @RequestParam(name = "user", defaultValue = "0") Integer usuarioId,
+            @RequestBody Exp exp) {
+        //se busca el proyecto y el usuario con sus respectivos ids
+        Usuario usuario = userService.findUsuario(usuarioId);
+
+        //se recorre el array de tecnologias
+        for (String eachTecno : tecno) {
+            if (tecnoService.findTecno(Integer.valueOf(eachTecno)) == null) {
+                System.out.println("no existe una tecnologia con id: " + eachTecno);
+            } else {
+                //se busca cada tecnologia por su i
+                Tecnologia toAdd = tecnoService.findTecno(Integer.valueOf(eachTecno));
+                //se agregrega la tecnologia a la relacion desde ambos lados exp--->tec y tec--->exp
+                exp.getTecnologias().add(toAdd);
+                toAdd.getExps().add(exp);
+            }
         }
+        if (usuario == null) {
+            System.out.println("No existe un usuario con id: " + usuarioId);
+        } else {
+            //si no esta vinculado se lo vincula
+            exp.setUsuario(usuario);
+        }
+        expService.saveExp(exp);
+        return exp;
     }
 
     @DeleteMapping("/delete/{id}")
     public String deleteExp(@PathVariable("id") Integer id) {
+        Exp exp = expService.findExp(id);
+        for (Tecnologia eachTecno : exp.getTecnologias()) {
+            eachTecno.getExps().removeIf(t -> t.getId() == id);
+        }
         if (expService.deleteExp(id)) {
             return "Experiencia eliminada";
         } else {
@@ -61,6 +88,11 @@ public class ExpController {
             @RequestParam(name = "user", defaultValue = "0") Integer usuarioId,
             @RequestBody Exp toChangeExp,
             @RequestParam(name = "unbind", defaultValue = "false") boolean unbind) {
+
+        System.out.println(tecno);
+        System.out.println(expId);
+        System.out.println(usuarioId);
+        System.out.println(unbind);
 
         //se busca el proyecto y el usuario con sus respectivos ids
         Exp exp = expService.findExp(expId);
@@ -111,4 +143,10 @@ public class ExpController {
         }
         return exp;
     }
+
+    @GetMapping("/one/{id}")
+    public Exp showExp(@PathVariable("id") Integer id) {
+        return expService.findExp(id);
+    }
+
 }
