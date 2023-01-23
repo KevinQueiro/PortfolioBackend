@@ -61,16 +61,25 @@ public class UsuarioController {
     public Usuario changeUser(@PathVariable("id") Integer id, @RequestBody Usuario user) {
         Usuario toChange = userService.findUsuario(id);
 
+        if (user.getPassword() == null) {
+            toChange.setPassword(toChange.getPassword());
+        } else {
+            toChange.setPassword(user.getPassword());
+        }
         toChange.setNombre(user.getNombre());
         toChange.setApellido(user.getApellido());
         toChange.setTitulo(user.getTitulo());
         toChange.setAbout(user.getAbout());
         toChange.setFoto(user.getFoto());
-        toChange.setPassword(user.getPassword());
-        
+
         userService.saveUser(toChange);
 
         return toChange;
+    }
+
+    @GetMapping("/one/{id}")
+    public Usuario showUser(@PathVariable("id") Integer id) {
+        return userService.findUsuario(id);
     }
 
 }

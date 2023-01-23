@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.util.Date;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,10 +26,13 @@ public class Educacion {
     private String lugar;
 
     @Column(name = "FechaFin")
-    private Date fechaFin;
+    private String fechaFin;
 
     @Column(name = "Titulo")
     private String titulo;
+    
+    @Column(name = "Foto")
+    private String foto;
 
     @JsonIgnore
     @ManyToOne (fetch = FetchType.EAGER)

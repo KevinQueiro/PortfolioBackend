@@ -132,7 +132,7 @@ public class ProyectoController {
     }
     
      @GetMapping("/one/{id}")
-    public Proyecto showExp(@PathVariable("id") Integer id) {
+    public Proyecto showPro(@PathVariable("id") Integer id) {
         return proService.findPro(id);
     }
 
