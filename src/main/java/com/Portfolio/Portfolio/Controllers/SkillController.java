@@ -42,7 +42,6 @@ public class SkillController {
             return skillService.saveSkill(skill);
             }
         } catch (Exception e) {
-            System.out.println("_____________________________" + e.getMessage());
             return null;
         }
         return null;
@@ -53,14 +52,12 @@ public class SkillController {
         try {
             return skillService.saveSkill(skill);
         } catch (Exception e) {
-            System.out.println("_____________________________" + e.getMessage());
             return null;
         }
     }
 
     @DeleteMapping("/delete/{id}")
     public String deleteSkill(@PathVariable("id") Integer id) {
-        System.out.println("entra el delete");
         if (skillService.deleteSkill(id)) {
             return "Skill eliminada";
         } else {

@@ -60,7 +60,6 @@ public class EducacionController {
     @PutMapping("/change/{id}")
     public Educacion changeOnlyEdu(@PathVariable("id") Integer id,
             @RequestBody Educacion edu) {
-        System.out.println("change education");
         Educacion toChange = eduService.findEdu(id);
 
         toChange.setFoto(edu.getFoto());

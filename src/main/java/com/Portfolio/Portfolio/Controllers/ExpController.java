@@ -87,11 +87,6 @@ public class ExpController {
             @RequestBody Exp toChangeExp,
             @RequestParam(name = "unbind", defaultValue = "false") boolean unbind) {
 
-        System.out.println(tecno);
-        System.out.println(expId);
-        System.out.println(usuarioId);
-        System.out.println(unbind);
-
         //se busca el proyecto y el usuario con sus respectivos ids
         Exp exp = expService.findExp(expId);
         Usuario usuario = userService.findUsuario(usuarioId);

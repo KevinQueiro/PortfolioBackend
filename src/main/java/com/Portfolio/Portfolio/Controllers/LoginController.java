@@ -21,7 +21,6 @@ public class LoginController {
     @PostMapping
     public Boolean login (@RequestBody LogIn userLog){
         Usuario user = userService.findUsuario(1);
-        System.out.println(user.getPassword().equals(userLog.getPassword()));
         return user.getPassword().equals(userLog.getPassword());
     }
     
