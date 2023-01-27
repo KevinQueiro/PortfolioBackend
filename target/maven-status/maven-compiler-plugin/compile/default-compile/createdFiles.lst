@@ -12,6 +12,7 @@ com\Portfolio\Portfolio\Service\Exp\ExpService.class
 com\Portfolio\Portfolio\Service\Skill\SkillService.class
 com\Portfolio\Portfolio\Repository\SkillRepository.class
 com\Portfolio\Portfolio\Models\Skill.class
+com\Portfolio\Portfolio\PortfolioApplication$1.class
 com\Portfolio\Portfolio\Service\Educacion\EducacionServiceImpl.class
 com\Portfolio\Portfolio\Service\Skill\SkillServiceImpl.class
 com\Portfolio\Portfolio\Service\Tecnologia\TecnologiaServiceImpl.class
