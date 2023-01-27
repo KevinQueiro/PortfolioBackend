@@ -7,6 +7,7 @@ com\Portfolio\Portfolio\Service\Usuario\UsuarioService.class
 com\Portfolio\Portfolio\Service\Tecnologia\TecnologiaService.class
 com\Portfolio\Portfolio\AplicationConfig.class
 com\Portfolio\Portfolio\Service\Educacion\EducacionService.class
+com\Portfolio\Portfolio\WebConfig.class
 com\Portfolio\Portfolio\Service\Exp\ExpService.class
 com\Portfolio\Portfolio\Service\Skill\SkillService.class
 com\Portfolio\Portfolio\Repository\SkillRepository.class
